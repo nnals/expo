@@ -18,6 +18,7 @@ type UpdateEventListener = (event: UpdateEvent) => void;
 
 export interface UpdatesEventSubscribtion {
   remove: () => void;
+<<<<<<< HEAD
 }
 
 type UpdateFetchResult = { isNew: false } | { isNew: true; manifest: Manifest };
@@ -37,6 +38,27 @@ export async function checkForUpdateAsync(): Promise<UpdateCheckResult> {
   };
 }
 
+=======
+}
+
+type UpdateFetchResult = { isNew: false } | { isNew: true; manifest: Manifest };
+
+export async function checkForUpdateAsync(): Promise<UpdateCheckResult> {
+  if (!OTA.checkForUpdateAsync) {
+    throw new UnavailabilityError('Updates', 'checkForUpdateAsync');
+  }
+  const result = await OTA.checkForUpdateAsync();
+  if (!result) {
+    return { isAvailable: false };
+  }
+
+  return {
+    isAvailable: true,
+    manifest: typeof result === 'string' ? JSON.parse(result) : result,
+  };
+}
+
+>>>>>>> @mczernek/expo-ota-test-app
 export async function fetchUpdateAsync({
   eventListener,
 }: { eventListener?: UpdateEventListener } = {}): Promise<UpdateFetchResult> {
@@ -48,11 +70,17 @@ export async function fetchUpdateAsync({
   if (eventListener && typeof eventListener === 'function') {
     subscription = addListener(eventListener);
   }
+<<<<<<< HEAD
   try {
     result = await OTA.fetchUpdateAsync();
   } finally {
     subscription && subscription.remove();
   }
+=======
+
+  result = await OTA.fetchUpdateAsync();
+  subscription && subscription.remove();
+>>>>>>> @mczernek/expo-ota-test-app
 
   if (!result) {
     return { isNew: false };
@@ -87,7 +115,13 @@ export async function readCurrentManifestAsync() {
   if (!OTA.readCurrentManifestAsync) {
     throw new UnavailabilityError('Updates', 'getCustomTabsSupportingBrowsersAsync');
   }
+<<<<<<< HEAD
   return OTA.readCurrentManifestAsync().then(result => typeof result === 'string' ? JSON.parse(result) : result);
+=======
+  return OTA.readCurrentManifestAsync().then(result =>
+    typeof result === 'string' ? JSON.parse(result) : result
+  );
+>>>>>>> @mczernek/expo-ota-test-app
 }
 
 export function addListener(listener: UpdateEventListener): UpdatesEventSubscribtion {
